@@ -4,15 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.banco.ubs.entities.Estoque;
 import com.banco.ubs.service.impl.EstoqueServiceImpl;
@@ -42,10 +40,10 @@ public class CargaProdutos {
 					JSONObject jO = (JSONObject) jsonArray.get(i);
 
 					estoque.setProduto((String) jO.get("product"));
-					estoque.setQuantidade(Integer.valueOf((int)jO.get("quantity")) );
+					estoque.setQuantidade(Integer.valueOf((String) jO.get("quantity").toString()) );
 					String preco = (String)jO.get("price");
-					preco.substring(1);
-					estoque.setPreco(Double.valueOf(preco));
+					String p = preco.substring(1, preco.length());
+					estoque.setPreco(Double.valueOf(p));
 					estoque.setTipo((String) jO.get("type"));
 					estoque.setIndustria((String) jO.get("industry"));
 					estoque.setOrigem((String) jO.get("origin"));
