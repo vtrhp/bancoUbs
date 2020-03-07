@@ -6,6 +6,8 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Duration;
+import java.time.Instant;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -25,6 +27,7 @@ public class CargaProdutos {
 	
 	public  void carga() throws IOException {
 		JSONParser jsonParser = new JSONParser();
+		Instant startTime = Instant.now();
 		try {
 			File dir = new File(
 					"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos");
@@ -40,6 +43,9 @@ public class CargaProdutos {
 					log.info("Estoque criado:{}", est.toString());
 				}
 			}
+			Instant endTime = Instant.now();
+			Duration totalTime = Duration.between(startTime, endTime);
+			log.info("Tempo de execucao da carga:{}", totalTime.getSeconds());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
