@@ -35,17 +35,9 @@ public class CargaProdutos {
 						.parse(new BufferedReader(new InputStreamReader(new FileInputStream(files[i]))));
 				JSONArray jsonArray = (JSONArray) jsonObject.get("data");
 				for (int j = 0; j < jsonArray.size(); j++) {
-					JSONObject jO = (JSONObject) jsonArray.get(i);
-					String preco = (String)jO.get("price");
-					String p = preco.substring(1, preco.length());
-					if(estoqueService.buscaPorProdutoQuantidadePreco((String) jO.get("product"), Integer.valueOf((String) jO.get("quantity").toString()), Double.valueOf(p)).isPresent()) {
-						log.info("Produto duplicado:{}", (String) jO.get("product"));
-						continue;
-					} else {
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
-						log.info("Estoque criado:{}", est.toString());
-					}
-
+					JSONObject jO = (JSONObject) jsonArray.get(j);
+					Estoque est = estoqueService.persistir(criaEstoque(jO));
+					log.info("Estoque criado:{}", est.toString());
 				}
 			}
 		} catch (Exception e) {
@@ -53,7 +45,7 @@ public class CargaProdutos {
 		}
 	}
 	
-	private static Estoque criaEstoque(JSONObject jO) {
+	private Estoque criaEstoque(JSONObject jO) {
 		Estoque estoque = new Estoque(); 
 		estoque.setProduto((String) jO.get("product"));
 		estoque.setQuantidade(Integer.valueOf((String) jO.get("quantity").toString()));
@@ -63,7 +55,7 @@ public class CargaProdutos {
 		estoque.setTipo((String) jO.get("type"));
 		estoque.setIndustria((String) jO.get("industry"));
 		estoque.setOrigem((String) jO.get("origin"));
-		estoque.setVolume(estoque.getPreco() * estoque.getQuantidade());
+		estoque.setVolume(Math.floor(estoque.getPreco() * estoque.getQuantidade()));
 		return estoque;
 	}
 

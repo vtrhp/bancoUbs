@@ -16,7 +16,6 @@ import com.banco.ubs.dto.LojistaDTO;
 import com.banco.ubs.entities.Estoque;
 import com.banco.ubs.io.CargaProdutos;
 import com.banco.ubs.response.Response;
-import com.banco.ubs.service.EstoqueService;
 import com.banco.ubs.service.impl.EstoqueServiceImpl;
 
 @RestController

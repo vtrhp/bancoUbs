@@ -3,7 +3,7 @@ create table if not exists estoque(
 	produto varchar(255),	
 	quantidade integer,	
 	preco double,
-	tipo varchar(2),
+	tipo varchar(255),
 	industria varchar(255),
 	origem varchar(255),
 	volume double,	
