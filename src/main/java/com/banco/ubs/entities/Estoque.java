@@ -25,6 +25,10 @@ public class Estoque implements Serializable {
 	private String industria;
 	private String origem;
 	private Double volume;
+	private Integer arquivo1;
+	private Integer arquivo2;
+	private Integer arquivo3;
+	private Integer arquivo4;
 
 	@Column(name = "id")
 	public Long getId() {
@@ -96,6 +100,38 @@ public class Estoque implements Serializable {
 
 	public void setVolume(Double volume) {
 		this.volume = volume;
+	}
+
+	public Integer getArquivo1() {
+		return arquivo1;
+	}
+
+	public void setArquivo1(Integer arquivo1) {
+		this.arquivo1 = arquivo1;
+	}
+
+	public Integer getArquivo2() {
+		return arquivo2;
+	}
+
+	public void setArquivo2(Integer arquivo2) {
+		this.arquivo2 = arquivo2;
+	}
+
+	public Integer getArquivo3() {
+		return arquivo3;
+	}
+
+	public void setArquivo3(Integer arquivo3) {
+		this.arquivo3 = arquivo3;
+	}
+
+	public Integer getArquivo4() {
+		return arquivo4;
+	}
+
+	public void setArquivo4(Integer arquivo4) {
+		this.arquivo4 = arquivo4;
 	}
 
 	@Override

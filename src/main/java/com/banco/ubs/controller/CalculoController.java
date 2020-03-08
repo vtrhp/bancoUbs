@@ -27,10 +27,10 @@ import com.banco.ubs.service.impl.EstoqueServiceImpl;
 @CrossOrigin("*")
 public class CalculoController {
 	private static final Logger log = LoggerFactory.getLogger(CargaProdutos.class);
-	
+
 	@Autowired
 	private CargaProdutos cp;
-	
+
 	@Autowired
 	private EstoqueServiceImpl es;
 
@@ -39,33 +39,34 @@ public class CalculoController {
 			@PathVariable("qtd") Integer qtd) {
 		Response<LojistaDTO> response = new Response<LojistaDTO>();
 		try {
-			//cp.carga();
-			Instant startTime = Instant.now();
-			cp.cargaParalela();
-			Instant endTime = Instant.now();
-			Duration totalTime = Duration.between(startTime, endTime);
-			log.info("Tempo de execucao da carga:{}", totalTime.getSeconds());
+			if (cp.getIsDone() == false) {
+				Instant startTime = Instant.now();
+				cp.cargaParalela();
+				Instant endTime = Instant.now();
+				Duration totalTime = Duration.between(startTime, endTime);
+				log.info("Tempo de execucao da carga:{}", totalTime.getSeconds());
+			}
+
 			List<EstoqueDTO> dto = converterEstoqueDTO(es.buscaPorProduto(produto));
-			es.calculaQtdPorLoja(dto, qtd).forEach( l -> response.setData(l));
+			es.calculaQtdPorLoja(dto, produto, qtd).forEach(l -> response.setData(l));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//List<Estoque> es = new ArrayList<Estoque>();
-		//response.setData(es);
 		return ResponseEntity.ok(response);
 
 	}
-	
+
 	private List<EstoqueDTO> converterEstoqueDTO(List<Estoque> es) {
 		EstoqueDTO dto = new EstoqueDTO();
 		List<EstoqueDTO> list = new ArrayList<EstoqueDTO>();
 		es.stream().forEach(e -> {
+			dto.setProduto(e.getProduto());
 			dto.setQuantidade(e.getQuantidade());
 			dto.setPreco(e.getPreco());
 			dto.setVolume(e.getVolume());
 			list.add(dto);
 		});
-		
+
 		return list;
 	}
 
