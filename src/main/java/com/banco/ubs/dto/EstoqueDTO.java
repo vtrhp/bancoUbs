@@ -3,18 +3,9 @@ package com.banco.ubs.dto;
 import java.util.List;
 
 public class EstoqueDTO {
-	private String produto;
 	private Integer quantidade;
 	private Double preco;
 	private Double volume;
-
-	public String getProduto() {
-		return produto;
-	}
-
-	public void setProduto(String produto) {
-		this.produto = produto;
-	}
 
 	public Integer getQuantidade() {
 		return quantidade;

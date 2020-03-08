@@ -46,7 +46,6 @@ public class EstoqueServiceImpl implements EstoqueService{
 	
 	
 	public List<LojistaDTO> calculaQtdPorLoja(List<EstoqueDTO> dto, Integer qtd ) {
-		//TODO: Concluir o calculo de produtos para lojistas
 		List<LojistaDTO> lojista = new ArrayList<LojistaDTO>();
 		List<EstoqueDTO> listEstoqueDto = new ArrayList<EstoqueDTO>();
 		Integer qtdTotal = dto.stream().mapToInt(EstoqueDTO::getQuantidade).sum();

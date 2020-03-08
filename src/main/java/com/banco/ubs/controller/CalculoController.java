@@ -1,8 +1,12 @@
 package com.banco.ubs.controller;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +26,8 @@ import com.banco.ubs.service.impl.EstoqueServiceImpl;
 @RequestMapping("/api/loja")
 @CrossOrigin("*")
 public class CalculoController {
-
+	private static final Logger log = LoggerFactory.getLogger(CargaProdutos.class);
+	
 	@Autowired
 	private CargaProdutos cp;
 	
@@ -34,8 +39,12 @@ public class CalculoController {
 			@PathVariable("qtd") Integer qtd) {
 		Response<LojistaDTO> response = new Response<LojistaDTO>();
 		try {
-			cp.carga();
-			
+			//cp.carga();
+			Instant startTime = Instant.now();
+			cp.cargaParalela();
+			Instant endTime = Instant.now();
+			Duration totalTime = Duration.between(startTime, endTime);
+			log.info("Tempo de execucao da carga:{}", totalTime.getSeconds());
 			List<EstoqueDTO> dto = converterEstoqueDTO(es.buscaPorProduto(produto));
 			es.calculaQtdPorLoja(dto, qtd).forEach( l -> response.setData(l));
 		} catch (Exception e) {
@@ -51,7 +60,6 @@ public class CalculoController {
 		EstoqueDTO dto = new EstoqueDTO();
 		List<EstoqueDTO> list = new ArrayList<EstoqueDTO>();
 		es.stream().forEach(e -> {
-			dto.setProduto(e.getProduto());
 			dto.setQuantidade(e.getQuantidade());
 			dto.setPreco(e.getPreco());
 			dto.setVolume(e.getVolume());
