@@ -1,6 +1,16 @@
 package com.banco.ubs.dto;
 
 public class EstoqueDTO {
+	
+	public EstoqueDTO() {}
+	
+	public EstoqueDTO(Integer quantidade, Double preco, Double volume) {
+		super();
+		this.quantidade = quantidade;
+		this.preco = preco;
+		this.volume = volume;
+	}
+
 	private Integer quantidade;
 	private Double preco;
 	private Double volume;

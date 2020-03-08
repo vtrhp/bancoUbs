@@ -3,6 +3,7 @@ package com.banco.ubs.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,9 +47,9 @@ public class EstoqueServiceImpl implements EstoqueService {
 	public List<LojistaDTO> calculaQtdPorLoja(List<EstoqueDTO> dto, String produto, Integer qtd) {
 		List<LojistaDTO> lojista = new ArrayList<LojistaDTO>();
 		List<EstoqueDTO> listEstoqueDto = new ArrayList<EstoqueDTO>();
-		Integer qtdTotal = this.findTotalByQuantidade(produto);
-		Double financeiro = this.findTotalByFinanceiro(produto);
-		Double precoMedio = this.findPrecoMedio(produto);
+		Integer qtdTotal = dto.stream().mapToInt(i -> i.getQuantidade() / qtd).sum();
+		Double financeiro = dto.stream().mapToDouble( i -> i.getVolume() / qtd).sum();
+		OptionalDouble precoMedio = dto.stream().mapToDouble(i -> i.getPreco() / qtd).average();
 		dto.forEach(e -> {
 			if (e.getQuantidade() % qtd > 0) {
 				for (int i = 0; i < qtd; i++) {
@@ -65,7 +66,7 @@ public class EstoqueServiceImpl implements EstoqueService {
 						listEstoqueDto.add(estoqueDto);
 					}
 				}
-				lojista.add(new LojistaDTO(listEstoqueDto, qtdTotal, financeiro, precoMedio));
+				lojista.add(new LojistaDTO(listEstoqueDto, listEstoqueDto.stream().mapToInt(i -> i.getQuantidade()).sum(), listEstoqueDto.stream().mapToDouble( i -> i.getVolume()).sum(), listEstoqueDto.stream().mapToDouble(i -> i.getPreco()).average()));
 			} else {
 				for (int i = 0; i < qtd; i++) {
 					EstoqueDTO estoqueDto = new EstoqueDTO();
@@ -73,27 +74,16 @@ public class EstoqueServiceImpl implements EstoqueService {
 					estoqueDto.setPreco(e.getPreco());
 					estoqueDto.setVolume((Math.floorDiv(e.getQuantidade(), qtd)) * e.getPreco());
 					listEstoqueDto.add(estoqueDto);
-					lojista.add(new LojistaDTO(listEstoqueDto, qtdTotal, financeiro, precoMedio));
 				}
-				lojista.add(new LojistaDTO(listEstoqueDto, qtdTotal, financeiro, precoMedio));
+				lojista.add(new LojistaDTO(listEstoqueDto, listEstoqueDto.stream().mapToInt(i -> i.getQuantidade()).sum(), listEstoqueDto.stream().mapToDouble( i -> i.getVolume()).sum(), listEstoqueDto.stream().mapToDouble(i -> i.getPreco()).average()));
 			}
 		});
 		return lojista;
 	}
 
 	@Override
-	public Integer findTotalByQuantidade(String produto) {
-		return estoqueRepository.findTotalByQuantidade(produto);
-	}
-
-	@Override
-	public Double findTotalByFinanceiro(String produto) {
-		return estoqueRepository.findTotalByFinanceiro(produto);
-	}
-
-	@Override
-	public Double findPrecoMedio(String produto) {
-		return estoqueRepository.findPrecoMedio(produto);
+	public Optional<Estoque> findOne() {
+		return estoqueRepository.findOne();
 	}
 
 }

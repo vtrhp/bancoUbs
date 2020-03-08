@@ -1,10 +1,11 @@
 package com.banco.ubs.dto;
 
 import java.util.List;
+import java.util.OptionalDouble;
 
 public class LojistaDTO {
 	
-	public LojistaDTO(List<EstoqueDTO> estoqueDTO, Integer qtdTotal, Double financeiro, Double precoMedio) {
+	public LojistaDTO(List<EstoqueDTO> estoqueDTO, Integer qtdTotal, Double financeiro, OptionalDouble precoMedio) {
 		super();
 		this.estoqueDTO = estoqueDTO;
 		this.qtdTotal = qtdTotal;
@@ -15,7 +16,7 @@ public class LojistaDTO {
 	private List<EstoqueDTO> estoqueDTO;
 	private Integer qtdTotal;
 	private Double financeiro;
-	private Double precoMedio;
+	private OptionalDouble precoMedio;
 
 	public List<EstoqueDTO> getEstoqueDTO() {
 		return estoqueDTO;
@@ -41,11 +42,11 @@ public class LojistaDTO {
 		this.financeiro = financeiro;
 	}
 
-	public Double getPrecoMedio() {
+	public OptionalDouble getPrecoMedio() {
 		return precoMedio;
 	}
 
-	public void setPrecoMedio(Double precoMedio) {
+	public void setPrecoMedio(OptionalDouble precoMedio) {
 		this.precoMedio = precoMedio;
 	}
 

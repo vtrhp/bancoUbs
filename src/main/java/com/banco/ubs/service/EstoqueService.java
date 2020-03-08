@@ -17,9 +17,5 @@ public interface EstoqueService {
 	
 	List<Estoque> buscaPorProduto(String produto);
 	
-	Integer findTotalByQuantidade(String produto);
-	
-	Double findTotalByFinanceiro(String produto);
-	
-	Double findPrecoMedio(String produto);
+	Optional<Estoque> findOne();
 }

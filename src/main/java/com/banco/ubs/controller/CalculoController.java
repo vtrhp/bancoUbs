@@ -2,8 +2,9 @@ package com.banco.ubs.controller;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +36,12 @@ public class CalculoController {
 	private EstoqueServiceImpl es;
 
 	@GetMapping(path = "/calculo/{produto}/{qtd}")
-	public ResponseEntity<Response<LojistaDTO>> calcula(@PathVariable("produto") String produto,
+	public ResponseEntity<Response<List<LojistaDTO>>> calcula(@PathVariable("produto") String produto,
 			@PathVariable("qtd") Integer qtd) {
-		Response<LojistaDTO> response = new Response<LojistaDTO>();
+		Response<List<LojistaDTO>> response = new Response<List<LojistaDTO>>();
 		try {
-			if (cp.getIsDone() == false) {
+			if (cp.getIsDone() == false && es.findOne().equals(Optional.empty())) {
+				
 				Instant startTime = Instant.now();
 				cp.cargaParalela();
 				Instant endTime = Instant.now();
@@ -48,7 +50,7 @@ public class CalculoController {
 			}
 
 			List<EstoqueDTO> dto = converterEstoqueDTO(es.buscaPorProduto(produto));
-			es.calculaQtdPorLoja(dto, produto, qtd).forEach(l -> response.setData(l));
+			response.setData(es.calculaQtdPorLoja(dto, produto, qtd));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -57,14 +59,9 @@ public class CalculoController {
 	}
 
 	private List<EstoqueDTO> converterEstoqueDTO(List<Estoque> es) {
-		EstoqueDTO dto = new EstoqueDTO();
-		List<EstoqueDTO> list = new ArrayList<EstoqueDTO>();
-		es.stream().forEach(e -> {
-			dto.setQuantidade(e.getQuantidade());
-			dto.setPreco(e.getPreco());
-			dto.setVolume(e.getVolume());
-			list.add(dto);
-		});
+		List<EstoqueDTO> list = es.stream()
+		.map( e -> new EstoqueDTO(e.getQuantidade(), e.getPreco(), e.getVolume()))
+		.collect(Collectors.toList());	
 
 		return list;
 	}

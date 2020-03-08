@@ -23,12 +23,6 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
 	@Query(value = "SELECT * FROM ESTOQUE e WHERE e.produto = ?", nativeQuery = true)
 	List<Estoque> findByProduto(String produto);
 	
-	@Query(value = "SELECT sum(e.quantidade) FROM ESTOQUE e WHERE e.produto = ?", nativeQuery = true)
-	Integer findTotalByQuantidade(String produto);
-	
-	@Query(value = "SELECT sum(e.volume) FROM ESTOQUE e WHERE e.produto = ?", nativeQuery = true)
-	Double findTotalByFinanceiro(String produto);
-	
-	@Query(value = "SELECT avg(e.preco) FROM ESTOQUE e WHERE e.produto = ?", nativeQuery = true)
-	Double findPrecoMedio(String produto);
+	@Query(value = "SELECT * FROM ESTOQUE LIMIT 1", nativeQuery = true)
+	Optional<Estoque> findOne();
 }
