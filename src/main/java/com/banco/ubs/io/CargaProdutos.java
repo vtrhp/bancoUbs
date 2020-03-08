@@ -39,24 +39,11 @@ public class CargaProdutos {
 							.parse(new BufferedReader(new InputStreamReader(new FileInputStream(
 									"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_1.json"))));
 					JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-					if(estoqueService.buscaTodos().isEmpty()) {
-						for (int j = 0; j < jsonArray.size(); j++) {
-							JSONObject jO = (JSONObject) jsonArray.get(j);
-							Estoque estoque = criaEstoque(jO);
-							estoque.setArquivo1(j);
-							Estoque est = estoqueService.persistir(estoque);
-							log.info("Estoque criado:{}", est.toString());
-						}
-					} else {
-						for (int j = estoqueService.findMaxLinhaArquivo1()+1; j < jsonArray.size(); j++) {
-							JSONObject jO = (JSONObject) jsonArray.get(j);
-							Estoque estoque = criaEstoque(jO);
-							estoque.setArquivo1(j);
-							Estoque est = estoqueService.persistir(estoque);
-							log.info("Estoque criado:{}", est.toString());
-						}
+					for (int j = 0; j < jsonArray.size(); j++) {
+						JSONObject jO = (JSONObject) jsonArray.get(j);
+						Estoque est = estoqueService.persistir(criaEstoque(jO));
+						log.info("Estoque criado:{}", est.toString());
 					}
-				
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -74,22 +61,10 @@ public class CargaProdutos {
 							.parse(new BufferedReader(new InputStreamReader(new FileInputStream(
 									"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_2.json"))));
 					JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-					if(estoqueService.buscaTodos().isEmpty()) {
-						for (int j = 0; j < jsonArray.size(); j++) {
-							JSONObject jO = (JSONObject) jsonArray.get(j);
-							Estoque estoque = criaEstoque(jO);
-							estoque.setArquivo2(j);
-							Estoque est = estoqueService.persistir(estoque);
-							log.info("Estoque criado:{}", est.toString());
-						}
-					} else {
-						for (int j = estoqueService.findMaxLinhaArquivo2()+1; j < jsonArray.size(); j++) {
-							JSONObject jO = (JSONObject) jsonArray.get(j);
-							Estoque estoque = criaEstoque(jO);
-							estoque.setArquivo2(j);
-							Estoque est = estoqueService.persistir(estoque);
-							log.info("Estoque criado:{}", est.toString());
-						}
+					for (int j = 0; j < jsonArray.size(); j++) {
+						JSONObject jO = (JSONObject) jsonArray.get(j);
+						Estoque est = estoqueService.persistir(criaEstoque(jO));
+						log.info("Estoque criado:{}", est.toString());
 					}
 
 				} catch (Exception e) {
@@ -109,22 +84,10 @@ public class CargaProdutos {
 							.parse(new BufferedReader(new InputStreamReader(new FileInputStream(
 									"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_3.json"))));
 					JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-					if(estoqueService.buscaTodos().isEmpty()) {
-						for (int j = 0; j < jsonArray.size(); j++) {
-							JSONObject jO = (JSONObject) jsonArray.get(j);
-							Estoque estoque = criaEstoque(jO);
-							estoque.setArquivo3(j);
-							Estoque est = estoqueService.persistir(estoque);
-							log.info("Estoque criado:{}", est.toString());
-						}
-					} else {
-						for (int j = estoqueService.findMaxLinhaArquivo3()+1; j < jsonArray.size(); j++) {
-							JSONObject jO = (JSONObject) jsonArray.get(j);
-							Estoque estoque = criaEstoque(jO);
-							estoque.setArquivo3(j);
-							Estoque est = estoqueService.persistir(estoque);
-							log.info("Estoque criado:{}", est.toString());
-						}
+					for (int j = 0; j < jsonArray.size(); j++) {
+						JSONObject jO = (JSONObject) jsonArray.get(j);
+						Estoque est = estoqueService.persistir(criaEstoque(jO));
+						log.info("Estoque criado:{}", est.toString());
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -144,23 +107,11 @@ public class CargaProdutos {
 	        				.parse(new BufferedReader(new InputStreamReader(new FileInputStream(
 	        						"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_4.json"))));
 	        		JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-	        		if(estoqueService.buscaTodos().isEmpty()) {
-						for (int j = 0; j < jsonArray.size(); j++) {
-							JSONObject jO = (JSONObject) jsonArray.get(j);
-							Estoque estoque = criaEstoque(jO);
-							estoque.setArquivo4(j);
-							Estoque est = estoqueService.persistir(estoque);
-							log.info("Estoque criado:{}", est.toString());
-						}
-					} else {
-						for (int j = estoqueService.findMaxLinhaArquivo4()+1; j < jsonArray.size(); j++) {
-							JSONObject jO = (JSONObject) jsonArray.get(j);
-							Estoque estoque = criaEstoque(jO);
-							estoque.setArquivo4(j);
-							Estoque est = estoqueService.persistir(estoque);
-							log.info("Estoque criado:{}", est.toString());
-						}
-					}
+	        		for (int j = 0; j < jsonArray.size(); j++) {
+	        			JSONObject jO = (JSONObject) jsonArray.get(j);
+	        			Estoque est = estoqueService.persistir(criaEstoque(jO));
+	        			log.info("Estoque criado:{}", est.toString());
+	        		}
 	        	} catch (Exception e) {
 	        		e.printStackTrace();
 	        	}

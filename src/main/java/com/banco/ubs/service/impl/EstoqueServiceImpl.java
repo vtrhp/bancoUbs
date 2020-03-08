@@ -96,24 +96,4 @@ public class EstoqueServiceImpl implements EstoqueService {
 		return estoqueRepository.findPrecoMedio(produto);
 	}
 
-	@Override
-	public Integer findMaxLinhaArquivo1() {
-		return estoqueRepository.findMaxLinhaArquivo1();
-	}
-
-	@Override
-	public Integer findMaxLinhaArquivo2() {
-		return estoqueRepository.findMaxLinhaArquivo2();
-	}
-
-	@Override
-	public Integer findMaxLinhaArquivo3() {
-		return estoqueRepository.findMaxLinhaArquivo3();
-	}
-
-	@Override
-	public Integer findMaxLinhaArquivo4() {
-		return estoqueRepository.findMaxLinhaArquivo4();
-	}
-
 }

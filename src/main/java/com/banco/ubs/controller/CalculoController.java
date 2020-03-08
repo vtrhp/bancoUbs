@@ -60,7 +60,6 @@ public class CalculoController {
 		EstoqueDTO dto = new EstoqueDTO();
 		List<EstoqueDTO> list = new ArrayList<EstoqueDTO>();
 		es.stream().forEach(e -> {
-			dto.setProduto(e.getProduto());
 			dto.setQuantidade(e.getQuantidade());
 			dto.setPreco(e.getPreco());
 			dto.setVolume(e.getVolume());
