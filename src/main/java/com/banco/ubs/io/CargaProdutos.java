@@ -3,6 +3,8 @@ package com.banco.ubs.io;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -29,6 +31,8 @@ public class CargaProdutos {
 	private Boolean isDone = false;
 
 	public void cargaParalela() throws InterruptedException {
+		
+		int arq1 = estoqueService.findCount().isPresent() ? (int) estoqueService.findCount().get().intValue() : 0;
 
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		  
@@ -39,11 +43,24 @@ public class CargaProdutos {
 							.parse(new BufferedReader(new InputStreamReader(new FileInputStream(
 									"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_1.json"))));
 					JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-					for (int j = 0; j < jsonArray.size(); j++) {
-						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
-						log.info("Estoque criado:{}", est.toString());
+					if(estoqueService.findOne().isPresent() && getIsDone()) {
+
+						for (int j = arq1; j < jsonArray.size(); j++) {
+							JSONObject jO = (JSONObject) jsonArray.get(j);
+							Estoque est = estoqueService.persistir(criaEstoque(jO));
+							log.info("Estoque criado:{}", est.toString());
+						}
+
+					} else {
+
+						for (int j = 0; j < jsonArray.size(); j++) {
+							JSONObject jO = (JSONObject) jsonArray.get(j);
+							Estoque est = estoqueService.persistir(criaEstoque(jO));
+							log.info("Estoque criado:{}", est.toString());
+						}
+
 					}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -123,16 +140,32 @@ public class CargaProdutos {
 	        };
 	        
 	        Future<?> taskStatus1 = executorService.submit(task1);
+	        while(!taskStatus1.isDone()){
+	        	  System.out.println("Task 1 are not yet complete....sleeping");
+	        	  Thread.sleep(1000);
+	        	}
 	        Future<?> taskStatus2 = executorService.submit(task2);
+	        while(!taskStatus2.isDone()){
+	        	  System.out.println("Task 2 are not yet complete....sleeping");
+	        	  Thread.sleep(1000);
+	        	}
 	        Future<?> taskStatus3 = executorService.submit(task3);
+	        while(!taskStatus3.isDone() ){
+	        	  System.out.println("Task 3 are not yet complete....sleeping");
+	        	  Thread.sleep(1000);
+	        	}
 	        Future<?> taskStatus4 = executorService.submit(task4);
-	        
-	        while(!taskStatus1.isDone() || !taskStatus2.isDone() || !taskStatus3.isDone() || !taskStatus4.isDone()){
-	        	  System.out.println("Task 1 and Task 2 and Task 3 and Task 4 are not yet complete....sleeping");
+	        while(!taskStatus4.isDone()){
+	        	  System.out.println("Task 4 are not yet complete....sleeping");
 	        	  Thread.sleep(1000);
 	        	}
 	        executorService.shutdown();
 	        this.setIsDone(true);
+	}
+	
+	private Path getFileURIFromResources(String fileName) throws Exception {
+	    ClassLoader classLoader = getClass().getClassLoader();
+	    return Paths.get(classLoader.getResource(fileName).getPath());
 	}
 
 	private Estoque criaEstoque(JSONObject jO) {

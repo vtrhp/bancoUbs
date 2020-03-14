@@ -18,4 +18,6 @@ public interface EstoqueService {
 	List<Estoque> buscaPorProduto(String produto);
 	
 	Optional<Estoque> findOne();
+	
+	Optional<Long> findCount();
 }

@@ -20,6 +20,7 @@ import com.banco.ubs.dto.EstoqueDTO;
 import com.banco.ubs.dto.LojistaDTO;
 import com.banco.ubs.entities.Estoque;
 import com.banco.ubs.io.CargaProdutos;
+import com.banco.ubs.io.CargaProdutos_V2;
 import com.banco.ubs.response.Response;
 import com.banco.ubs.service.impl.EstoqueServiceImpl;
 
@@ -31,6 +32,9 @@ public class CalculoController {
 
 	@Autowired
 	private CargaProdutos cp;
+	
+	@Autowired
+	private CargaProdutos_V2 cp_V2;
 
 	@Autowired
 	private EstoqueServiceImpl es;
@@ -43,7 +47,8 @@ public class CalculoController {
 			if (cp.getIsDone() == false && es.findOne().equals(Optional.empty())) {
 				
 				Instant startTime = Instant.now();
-				cp.cargaParalela();
+				//cp.cargaParalela();
+				cp_V2.cargaParalela();
 				Instant endTime = Instant.now();
 				Duration totalTime = Duration.between(startTime, endTime);
 				log.info("Tempo de execucao da carga:{}", totalTime.getSeconds());

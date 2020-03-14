@@ -12,6 +12,7 @@ import com.banco.ubs.entities.Estoque;
 
 @Repository
 public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
+	
 	@Transactional(readOnly = true)
 	Optional<Estoque> findById(Long id);
 
@@ -25,4 +26,7 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
 	
 	@Query(value = "SELECT * FROM ESTOQUE LIMIT 1", nativeQuery = true)
 	Optional<Estoque> findOne();
+	
+	@Query(value = "select count(*) from estoque", nativeQuery = true)
+	Optional<Long> findCount();
 }
