@@ -46,7 +46,7 @@ public class EstoqueServiceImpl implements EstoqueService {
 	public List<LojistaDTO> calculaQtdPorLoja(List<EstoqueDTO> dto, String produto, Integer qtd) {
 		List<LojistaDTO> lojista = new ArrayList<LojistaDTO>();
 		List<EstoqueDTO> listEstoqueDto = new ArrayList<EstoqueDTO>();
-		dto.forEach(e -> {
+		dto.stream().distinct().forEach(e -> {
 			if (e.getQuantidade() % qtd > 0) {
 				for (int i = 0; i < qtd; i++) {
 					EstoqueDTO estoqueDto = new EstoqueDTO();

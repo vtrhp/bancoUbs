@@ -12,11 +12,19 @@ public class LojistaDTO {
 		this.financeiro = financeiro;
 		this.precoMedio = precoMedio;
 	}
-
+	private String loja;
 	private List<EstoqueDTO> estoqueDTO;
 	private Integer qtdTotal;
 	private Double financeiro;
 	private OptionalDouble precoMedio;
+	
+	public String getLoja() {
+		return loja;
+	}
+
+	public void setLoja(String loja) {
+		this.loja = loja;
+	}
 
 	public List<EstoqueDTO> getEstoqueDTO() {
 		return estoqueDTO;

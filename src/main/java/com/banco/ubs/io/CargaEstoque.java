@@ -47,19 +47,19 @@ public class CargaEstoque {
 	};
 
 	public void criaThreads() throws InterruptedException {
-		Stream.of(lePath()).forEach(f -> this.execCarga(task(f)));;
+		Stream.of(leDiretorio()).forEach(f -> this.execThread(task(f)));
+		this.setIsDone(true);
 	}
 	
-	private void execCarga(Runnable task) {
+	private void execThread(Runnable task) {
 		try {
 			ExecutorService executorService = Executors.newSingleThreadExecutor();
-			 Future<?> taskStatus1 = executorService.submit(task);
-		        while(!taskStatus1.isDone()){
-		        	log.info("Task 1 are not yet complete....sleeping");
+			 Future<?> taskStatus = executorService.submit(task);
+		        while(!taskStatus.isDone()){
+		        	log.info("A task ainda nao foi concluida....sleeping");
 		        	  Thread.sleep(1000);
 		        	}
 			executorService.shutdown();
-			this.setIsDone(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,7 +68,7 @@ public class CargaEstoque {
 	
 	private Runnable task(File path) {
 		int arq1 = estoqueService.findCount().isPresent() ? (int) estoqueService.findCount().get().intValue() : 0;
-		Runnable task1 = () -> {
+		Runnable task = () -> {
 			CharBuffer charBuffer = null;
 			Path pathToRead = null;
 			try {
@@ -76,13 +76,10 @@ public class CargaEstoque {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-
 			try (FileChannel fileChannel = (FileChannel) Files.newByteChannel(pathToRead,
 					EnumSet.of(StandardOpenOption.READ))) {
-
 				MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0,
 						fileChannel.size());
-
 				if (mappedByteBuffer != null) {
 					charBuffer = Charset.forName("UTF-8").decode(mappedByteBuffer);
 				}
@@ -96,25 +93,22 @@ public class CargaEstoque {
 						Estoque est = estoqueService.persistir(criaEstoque(jO));
 						log.info("Estoque criado:{}", est.toString());
 					}
-
 				} else {
-
 					for (int j = 0; j < jsonArray.size(); j++) {
 						JSONObject jO = (JSONObject) jsonArray.get(j);
 						Estoque est = estoqueService.persistir(criaEstoque(jO));
 						log.info("Estoque criado:{}", est.toString());
 					}
-
 				}
 			} catch (IOException | ParseException e1) {
 				e1.printStackTrace();
 			}
 
 		};
-		return task1;
+		return task;
 	}
 	
-	private File[] lePath() {
+	private File[] leDiretorio() {
 		Properties prop = Utils.getProp();
     	File dir = new File(prop.getProperty("prop.dir"));
         File[] files = dir.listFiles(filter);
