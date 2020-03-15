@@ -1,5 +1,7 @@
 package com.banco.ubs.io;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -13,6 +15,7 @@ import java.util.EnumSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Stream;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -34,17 +37,40 @@ public class CargaEstoque {
 	private EstoqueService estoqueService;
 
 	private Boolean isDone = false;
+	
+	static FileFilter filter = new FileFilter() {
+		public boolean accept(File file) {
+			return file.getName().endsWith(".json");
+		}
+	};
 
 	public void criaThreads() throws InterruptedException {
+		Stream.of(lePath()).forEach(f -> this.execCarga(task(f)));;
+	}
+	
+	private void execCarga(Runnable task) {
+		try {
+			ExecutorService executorService = Executors.newSingleThreadExecutor();
+			 Future<?> taskStatus1 = executorService.submit(task);
+		        while(!taskStatus1.isDone()){
+		        	log.info("Task 1 are not yet complete....sleeping");
+		        	  Thread.sleep(1000);
+		        	}
+			executorService.shutdown();
+			this.setIsDone(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+	}
+	
+	private Runnable task(File path) {
 		int arq1 = estoqueService.findCount().isPresent() ? (int) estoqueService.findCount().get().intValue() : 0;
-
 		Runnable task1 = () -> {
 			CharBuffer charBuffer = null;
 			Path pathToRead = null;
 			try {
-				pathToRead = Paths.get(
-						"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_1.json");
+				pathToRead = Paths.get(path.toString());
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -61,8 +87,7 @@ public class CargaEstoque {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject jsonObject = (JSONObject) jsonParser.parse(charBuffer.toString());
 				JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-
-				if(estoqueService.findOne().isPresent() && getIsDone()) {
+				if(estoqueService.findOne().isPresent() && !getIsDone() && estoqueService.findCount().get().intValue() < jsonArray.size()) {
 
 					for (int j = arq1; j < jsonArray.size(); j++) {
 						JSONObject jO = (JSONObject) jsonArray.get(j);
@@ -84,172 +109,13 @@ public class CargaEstoque {
 			}
 
 		};
-		
-		Runnable task2 = () -> {
-			CharBuffer charBuffer = null;
-			Path pathToRead = null;
-			try {
-				pathToRead = Paths.get(
-						"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_2.json");
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-
-			try (FileChannel fileChannel = (FileChannel) Files.newByteChannel(pathToRead,
-					EnumSet.of(StandardOpenOption.READ))) {
-
-				MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0,
-						fileChannel.size());
-
-				if (mappedByteBuffer != null) {
-					charBuffer = Charset.forName("UTF-8").decode(mappedByteBuffer);
-				}
-				JSONParser jsonParser = new JSONParser();
-				JSONObject jsonObject = (JSONObject) jsonParser.parse(charBuffer.toString());
-				JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-
-				if(estoqueService.findOne().isPresent() && getIsDone()) {
-
-					for (int j = arq1; j < jsonArray.size(); j++) {
-						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
-						log.info("Estoque criado:{}", est.toString());
-					}
-
-				} else {
-
-					for (int j = 0; j < jsonArray.size(); j++) {
-						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
-						log.info("Estoque criado:{}", est.toString());
-					}
-
-				}
-			} catch (IOException | ParseException e1) {
-				e1.printStackTrace();
-			}
-
-		};
-		
-		Runnable task3 = () -> {
-			CharBuffer charBuffer = null;
-			Path pathToRead = null;
-			try {
-				pathToRead = Paths.get(
-						"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_3.json");
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-
-			try (FileChannel fileChannel = (FileChannel) Files.newByteChannel(pathToRead,
-					EnumSet.of(StandardOpenOption.READ))) {
-
-				MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0,
-						fileChannel.size());
-
-				if (mappedByteBuffer != null) {
-					charBuffer = Charset.forName("UTF-8").decode(mappedByteBuffer);
-				}
-				JSONParser jsonParser = new JSONParser();
-				JSONObject jsonObject = (JSONObject) jsonParser.parse(charBuffer.toString());
-				JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-
-				if(estoqueService.findOne().isPresent() && getIsDone()) {
-
-					for (int j = arq1; j < jsonArray.size(); j++) {
-						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
-						log.info("Estoque criado:{}", est.toString());
-					}
-
-				} else {
-
-					for (int j = 0; j < jsonArray.size(); j++) {
-						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
-						log.info("Estoque criado:{}", est.toString());
-					}
-
-				}
-			} catch (IOException | ParseException e1) {
-				e1.printStackTrace();
-			}
-
-		};
-		
-		Runnable task4 = () -> {
-			CharBuffer charBuffer = null;
-			Path pathToRead = null;
-			try {
-				pathToRead = Paths.get(
-						"D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos\\data_4.json");
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-
-			try (FileChannel fileChannel = (FileChannel) Files.newByteChannel(pathToRead,
-					EnumSet.of(StandardOpenOption.READ))) {
-
-				MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0,
-						fileChannel.size());
-
-				if (mappedByteBuffer != null) {
-					charBuffer = Charset.forName("UTF-8").decode(mappedByteBuffer);
-				}
-				JSONParser jsonParser = new JSONParser();
-				JSONObject jsonObject = (JSONObject) jsonParser.parse(charBuffer.toString());
-				JSONArray jsonArray = (JSONArray) jsonObject.get("data");
-
-				if(estoqueService.findOne().isPresent() && getIsDone()) {
-
-					for (int j = arq1; j < jsonArray.size(); j++) {
-						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
-						log.info("Estoque criado:{}", est.toString());
-					}
-
-				} else {
-
-					for (int j = 0; j < jsonArray.size(); j++) {
-						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
-						log.info("Estoque criado:{}", est.toString());
-					}
-
-				}
-			} catch (IOException | ParseException e1) {
-				e1.printStackTrace();
-			}
-
-		};
-
-		this.execCarga(task1, task2, task3, task4);
+		return task1;
 	}
 	
-	private void execCarga(Runnable task1, Runnable task2, Runnable task3, Runnable task4) throws InterruptedException {
-		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-		 Future<?> taskStatus1 = executorService.submit(task1);
-	        while(!taskStatus1.isDone()){
-	        	  System.out.println("Task 1 are not yet complete....sleeping");
-	        	  Thread.sleep(1000);
-	        	}
-	        Future<?> taskStatus2 = executorService.submit(task2);
-	        while(!taskStatus2.isDone()){
-	        	  System.out.println("Task 2 are not yet complete....sleeping");
-	        	  Thread.sleep(1000);
-	        	}
-	        Future<?> taskStatus3 = executorService.submit(task3);
-	        while(!taskStatus3.isDone() ){
-	        	  System.out.println("Task 3 are not yet complete....sleeping");
-	        	  Thread.sleep(1000);
-	        	}
-	        Future<?> taskStatus4 = executorService.submit(task4);
-	        while(!taskStatus4.isDone()){
-	        	  System.out.println("Task 4 are not yet complete....sleeping");
-	        	  Thread.sleep(1000);
-	        	}
-		executorService.shutdown();
-		this.setIsDone(true);
+	private File[] lePath() {
+    	File dir = new File("D:\\DESENVOLVIMENTO\\WORKSPACES\\workspace_banco_ubs\\ubs\\src\\main\\resources\\arquivos");
+        File[] files = dir.listFiles(filter);
+        return files;
 	}
 
 	private Estoque criaEstoque(JSONObject jO) {
