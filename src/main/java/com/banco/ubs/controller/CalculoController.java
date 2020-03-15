@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.banco.ubs.dto.EstoqueDTO;
 import com.banco.ubs.dto.LojistaDTO;
 import com.banco.ubs.entities.Estoque;
-import com.banco.ubs.io.CargaProdutos;
-import com.banco.ubs.io.CargaProdutos_V2;
+import com.banco.ubs.io.CargaEstoque;
 import com.banco.ubs.response.Response;
 import com.banco.ubs.service.impl.EstoqueServiceImpl;
 
@@ -28,13 +27,10 @@ import com.banco.ubs.service.impl.EstoqueServiceImpl;
 @RequestMapping("/api/loja")
 @CrossOrigin("*")
 public class CalculoController {
-	private static final Logger log = LoggerFactory.getLogger(CargaProdutos.class);
+	private static final Logger log = LoggerFactory.getLogger(CalculoController.class);
 
 	@Autowired
-	private CargaProdutos cp;
-	
-	@Autowired
-	private CargaProdutos_V2 cp_V2;
+	private CargaEstoque ce;
 
 	@Autowired
 	private EstoqueServiceImpl es;
@@ -44,11 +40,10 @@ public class CalculoController {
 			@PathVariable("qtd") Integer qtd) {
 		Response<List<LojistaDTO>> response = new Response<List<LojistaDTO>>();
 		try {
-			if (cp.getIsDone() == false && es.findOne().equals(Optional.empty())) {
+			if (ce.getIsDone() == false && es.findOne().equals(Optional.empty())) {
 				
 				Instant startTime = Instant.now();
-				//cp.cargaParalela();
-				cp_V2.cargaParalela();
+				ce.criaThreads();
 				Instant endTime = Instant.now();
 				Duration totalTime = Duration.between(startTime, endTime);
 				log.info("Tempo de execucao da carga:{}", totalTime.getSeconds());

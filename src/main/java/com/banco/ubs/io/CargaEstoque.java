@@ -27,19 +27,17 @@ import com.banco.ubs.entities.Estoque;
 import com.banco.ubs.service.EstoqueService;
 
 @Component
-public class CargaProdutos_V2 {
-	private static final Logger log = LoggerFactory.getLogger(CargaProdutos_V2.class);
+public class CargaEstoque {
+	private static final Logger log = LoggerFactory.getLogger(CargaEstoque.class);
 
 	@Autowired
 	private EstoqueService estoqueService;
 
 	private Boolean isDone = false;
 
-	public void cargaParalela() throws InterruptedException {
+	public void criaThreads() throws InterruptedException {
 
 		int arq1 = estoqueService.findCount().isPresent() ? (int) estoqueService.findCount().get().intValue() : 0;
-
-		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
 		Runnable task1 = () -> {
 			CharBuffer charBuffer = null;
@@ -225,6 +223,11 @@ public class CargaProdutos_V2 {
 
 		};
 
+		this.execCarga(task1, task2, task3, task4);
+	}
+	
+	private void execCarga(Runnable task1, Runnable task2, Runnable task3, Runnable task4) throws InterruptedException {
+		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		 Future<?> taskStatus1 = executorService.submit(task1);
 	        while(!taskStatus1.isDone()){
 	        	  System.out.println("Task 1 are not yet complete....sleeping");
