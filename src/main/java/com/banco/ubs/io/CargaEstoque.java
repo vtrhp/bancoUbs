@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.EnumSet;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -29,7 +28,7 @@ import org.springframework.stereotype.Component;
 
 import com.banco.ubs.entities.Estoque;
 import com.banco.ubs.service.EstoqueService;
-import com.banco.ubs.utils.Utils;
+import com.banco.ubs.utils.ConfigProperties;
 
 @Component
 public class CargaEstoque {
@@ -37,6 +36,10 @@ public class CargaEstoque {
 
 	@Autowired
 	private EstoqueService estoqueService;
+	
+	@Autowired
+	ConfigProperties configProp;
+
 
 	private Boolean isDone = false;
 	
@@ -109,8 +112,7 @@ public class CargaEstoque {
 	}
 	
 	private File[] leDiretorio() {
-		Properties prop = Utils.getProp();
-    	File dir = new File(prop.getProperty("prop.dir"));
+    	File dir = new File(configProp.getConfigValue("prop.dir"));
         File[] files = dir.listFiles(filter);
         return files;
 	}

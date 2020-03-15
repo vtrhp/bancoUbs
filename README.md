@@ -17,6 +17,8 @@ Utilize os comandos abaixo para criar o schema.
 Faça o clone do projeto https://github.com/vtrhp/bancoUbs
 Import o projeto no eclipse.
 
+No arquivo Application.Properties na propriedade prop.dir informe o diretório onde os arquivos estão.
+
 Execute o projeto como Spring Boot App.
 
 Execute a chamada do endPoint conforme exemplo abaixo, informando o produto e a quantidade na URL.
