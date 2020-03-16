@@ -2,13 +2,12 @@
 Teste Banco UBS
 
 ### Pré-requisitos
-Banco de Dados MySQL
-JDK 8 
-Eclipse IDE
+Banco de Dados MySQL, JDK 8 e Eclipse IDE
 
 ### Guia
 Crie um banco de dados
 com usuario root e senha t5d34e
+
 Utilize os comandos abaixo para criar o schema.
 
 	create database ubs;
