@@ -1,0 +1,1 @@
+delete from estoque where produto = 'TESTE';
