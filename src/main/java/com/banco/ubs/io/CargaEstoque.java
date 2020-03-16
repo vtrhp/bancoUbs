@@ -70,7 +70,7 @@ public class CargaEstoque {
 	}
 	
 	private Runnable task(File path) {
-		int arq1 = estoqueService.findCount().isPresent() ? (int) estoqueService.findCount().get().intValue() : 0;
+		int arq1 = estoqueService.findCount().isPresent() ? (int) estoqueService.findCount().get().intValue() + 1 : 0;
 		Runnable task = () -> {
 			CharBuffer charBuffer = null;
 			Path pathToRead = null;
