@@ -6,7 +6,5 @@ create table if not exists estoque(
 	tipo varchar(255),
 	industria varchar(255),
 	origem varchar(255),
-	volume double,
-	data_criacao date,	
-	data_atualizacao date
+	volume double
 )engine = innodb;
