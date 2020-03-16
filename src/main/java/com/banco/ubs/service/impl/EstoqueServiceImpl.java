@@ -20,11 +20,6 @@ public class EstoqueServiceImpl implements EstoqueService {
 	private EstoqueRepository estoqueRepository;
 
 	@Override
-	public Optional<Estoque> buscarPorId(Long id) {
-		return estoqueRepository.findById(id);
-	}
-
-	@Override
 	public Estoque persistir(Estoque estoque) {
 		return estoqueRepository.save(estoque);
 	}
