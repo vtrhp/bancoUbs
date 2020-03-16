@@ -1,10 +1,7 @@
 package com.banco.ubs.service.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -17,18 +14,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.banco.ubs.entities.Estoque;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Sql("/sql/delete_all_data.sql")
 class EstoqueServiceImplTest {
 	@Autowired
 	private EstoqueServiceImpl estoqueService;
-
-	@Test
-	void testBuscarPorId() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	void testPersistir() {
@@ -60,12 +51,14 @@ class EstoqueServiceImplTest {
 
 	@Test
 	void testFindOne() {
-		fail("Not yet implemented");
+		estoqueService.persistir(criaEstoque());
+		Assert.assertTrue(estoqueService.findOne().isPresent());
 	}
 
 	@Test
 	void testFindCount() {
-		fail("Not yet implemented");
+		estoqueService.persistir(criaEstoque());
+		Assert.assertTrue(estoqueService.findCount().isPresent());
 	}
 	
 	private Estoque criaEstoque() {
