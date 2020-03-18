@@ -2,7 +2,7 @@
 Teste Banco UBS
 
 ### Pré-requisitos
-Banco de Dados MySQL, JDK 8 e Eclipse IDE
+Banco de Dados MySQL, JDK 8 e Eclipse IDE, Maven
 
 ### Guia
 Crie um banco de dados
@@ -18,9 +18,13 @@ Import o projeto no eclipse.
 
 No arquivo Application.Properties na propriedade prop.dir informe o diretório onde os arquivos estão.
 
+Configure o Maven nas variáveis de ambiente.
+
 Execute o projeto como Spring Boot App.
 
 Execute a chamada do endPoint conforme exemplo abaixo, informando o produto e a quantidade na URL.
 
 	http://localhost:8080/api/loja/calculo/RTIX/3
+	
+execute o shell script verifica_servidor.sh
 
