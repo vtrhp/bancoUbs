@@ -26,5 +26,5 @@ Execute a chamada do endPoint conforme exemplo abaixo, informando o produto e a 
 
 	http://localhost:8080/api/loja/calculo/RTIX/3
 	
-execute o shell script verifica_servidor.sh
+Criar umas task no cron ou agendador de tarefas do windows para executar o shell script verifica_servidor.sh a cada 10 segundos.
 
