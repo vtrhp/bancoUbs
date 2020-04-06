@@ -41,28 +41,24 @@ public class CalculoController {
 		Response<List<LojistaDTO>> response = new Response<List<LojistaDTO>>();
 		try {
 			if (ce.getIsDone() == false && es.findOne().equals(Optional.empty())) {
-				
 				Instant startTime = Instant.now();
 				ce.criaThreads();
 				Instant endTime = Instant.now();
 				Duration totalTime = Duration.between(startTime, endTime);
 				log.info("Tempo de execucao da carga:{}", totalTime.getSeconds());
 			}
-
 			List<EstoqueDTO> dto = converterEstoqueDTO(es.buscaPorProduto(produto));
 			response.setData(es.calculaQtdPorLoja(dto, produto, qtd));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ResponseEntity.ok(response);
-
 	}
 
 	private List<EstoqueDTO> converterEstoqueDTO(List<Estoque> es) {
 		List<EstoqueDTO> list = es.stream()
 		.map( e -> new EstoqueDTO(e.getQuantidade(), e.getPreco(), e.getVolume()))
-		.collect(Collectors.toList());	
-
+		.collect(Collectors.toList());
 		return list;
 	}
 

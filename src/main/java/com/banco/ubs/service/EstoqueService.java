@@ -6,16 +6,16 @@ import java.util.Optional;
 import com.banco.ubs.entities.Estoque;
 
 public interface EstoqueService {
-	
+
 	Estoque persistir(Estoque estoque);
-	
+
 	Optional<Estoque> buscaPorProdutoQuantidadePreco(String produto, Integer quantidade, Double preco);
-	
+
 	List<Estoque> buscaTodos();
-	
+
 	List<Estoque> buscaPorProduto(String produto);
-	
+
 	Optional<Estoque> findOne();
-	
+
 	Optional<Long> findCount();
 }

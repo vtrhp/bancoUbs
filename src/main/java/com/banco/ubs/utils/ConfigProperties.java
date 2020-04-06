@@ -8,12 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource("classpath:application.properties")
 public class ConfigProperties {
-	
+
 	@Autowired
     private Environment env;
 
-    public String getConfigValue(String configKey){
+    public String getConfigValue(String configKey) {
         return env.getProperty(configKey);
     }
-
 }

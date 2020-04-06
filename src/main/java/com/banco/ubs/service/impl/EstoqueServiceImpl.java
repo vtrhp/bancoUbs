@@ -81,5 +81,4 @@ public class EstoqueServiceImpl implements EstoqueService {
 	public Optional<Long> findCount() {
 		return estoqueRepository.findCount();
 	}
-
 }

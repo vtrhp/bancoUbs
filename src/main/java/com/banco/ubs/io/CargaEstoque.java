@@ -36,13 +36,12 @@ public class CargaEstoque {
 
 	@Autowired
 	private EstoqueService estoqueService;
-	
+
 	@Autowired
 	ConfigProperties configProp;
 
-
 	private Boolean isDone = false;
-	
+
 	static FileFilter filter = new FileFilter() {
 		public boolean accept(File file) {
 			return file.getName().endsWith(".json");
@@ -53,7 +52,7 @@ public class CargaEstoque {
 		Stream.of(leDiretorio()).forEach(f -> this.execThread(task(f)));
 		this.setIsDone(true);
 	}
-	
+
 	private void execThread(Runnable task) {
 		try {
 			ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -66,9 +65,8 @@ public class CargaEstoque {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
-	
+
 	private Runnable task(File path) {
 		int arq1 = estoqueService.findCount().isPresent() ? (int) estoqueService.findCount().get().intValue() + 1 : 0;
 		Runnable task = () -> {
@@ -90,7 +88,6 @@ public class CargaEstoque {
 				JSONObject jsonObject = (JSONObject) jsonParser.parse(charBuffer.toString());
 				JSONArray jsonArray = (JSONArray) jsonObject.get("data");
 				if(estoqueService.findOne().isPresent() && !getIsDone() && estoqueService.findCount().get().intValue() < jsonArray.size()) {
-
 					for (int j = arq1; j < jsonArray.size(); j++) {
 						JSONObject jO = (JSONObject) jsonArray.get(j);
 						Estoque est = estoqueService.persistir(criaEstoque(jO));
@@ -106,11 +103,10 @@ public class CargaEstoque {
 			} catch (IOException | ParseException e1) {
 				e1.printStackTrace();
 			}
-
 		};
 		return task;
 	}
-	
+
 	private File[] leDiretorio() {
     	File dir = new File(configProp.getConfigValue("prop.dir"));
         File[] files = dir.listFiles(filter);
