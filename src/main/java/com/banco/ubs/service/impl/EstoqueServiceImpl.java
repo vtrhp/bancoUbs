@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.banco.ubs.dto.EstoqueDTO;
 import com.banco.ubs.dto.LojistaDTO;
 import com.banco.ubs.entities.Estoque;
+import com.banco.ubs.io.CargaBancoDeDados;
 import com.banco.ubs.io.CargaEstoque;
 import com.banco.ubs.io.CargaEstoqueEmMemoria;
 import com.banco.ubs.repository.EstoqueRepository;
@@ -35,6 +36,9 @@ public class EstoqueServiceImpl implements EstoqueService {
 
 	@Autowired
 	private CargaEstoqueEmMemoria cargaEstoqueEmMemoria;
+	
+	@Autowired
+	private CargaBancoDeDados cargaBancoDeDados;
 
 	@Override
 	public Estoque persistir(Estoque estoque) {
@@ -112,6 +116,11 @@ public class EstoqueServiceImpl implements EstoqueService {
 		Instant endTime = Instant.now();
 		Duration totalTime = Duration.between(startTime, endTime);
 		log.info("Tempo de execucao da carga em memoria: {} segudos", totalTime.getSeconds());
+		try {
+			cargaBancoDeDados.criaThreads(listaEstoque);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return listaEstoque;
 	}
 
