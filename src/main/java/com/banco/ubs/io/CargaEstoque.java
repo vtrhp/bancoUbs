@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 import com.banco.ubs.entities.Estoque;
 import com.banco.ubs.service.EstoqueService;
 import com.banco.ubs.utils.ConfigProperties;
+import com.banco.ubs.utils.Utils;
 
 @Component
 public class CargaEstoque {
@@ -90,13 +91,13 @@ public class CargaEstoque {
 				if(estoqueService.findOne().isPresent() && !getIsDone() && estoqueService.findCount().get().intValue() < jsonArray.size()) {
 					for (int j = arq1; j < jsonArray.size(); j++) {
 						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
+						Estoque est = estoqueService.persistir(Utils.criaEstoque(jO));
 						log.info("Estoque criado:{}", est.toString());
 					}
 				} else {
 					for (int j = 0; j < jsonArray.size(); j++) {
 						JSONObject jO = (JSONObject) jsonArray.get(j);
-						Estoque est = estoqueService.persistir(criaEstoque(jO));
+						Estoque est = estoqueService.persistir(Utils.criaEstoque(jO));
 						log.info("Estoque criado:{}", est.toString());
 					}
 				}
@@ -111,20 +112,6 @@ public class CargaEstoque {
     	File dir = new File(configProp.getConfigValue("prop.dir"));
         File[] files = dir.listFiles(filter);
         return files;
-	}
-
-	private Estoque criaEstoque(JSONObject jO) {
-		Estoque estoque = new Estoque();
-		estoque.setProduto((String) jO.get("product"));
-		estoque.setQuantidade(Integer.valueOf((String) jO.get("quantity").toString()));
-		String preco = (String) jO.get("price");
-		String p = preco.substring(1, preco.length());
-		estoque.setPreco(Double.valueOf(p));
-		estoque.setTipo((String) jO.get("type"));
-		estoque.setIndustria((String) jO.get("industry"));
-		estoque.setOrigem((String) jO.get("origin"));
-		estoque.setVolume(Math.floor(estoque.getPreco() * estoque.getQuantidade()));
-		return estoque;
 	}
 
 	public Boolean getIsDone() {

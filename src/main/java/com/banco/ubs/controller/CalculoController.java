@@ -1,14 +1,12 @@
 package com.banco.ubs.controller;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,18 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.banco.ubs.dto.EstoqueDTO;
 import com.banco.ubs.dto.LojistaDTO;
 import com.banco.ubs.entities.Estoque;
-import com.banco.ubs.io.CargaEstoque;
 import com.banco.ubs.response.Response;
 import com.banco.ubs.service.impl.EstoqueServiceImpl;
 
 @RestController
 @RequestMapping("/api/loja")
 @CrossOrigin("*")
+@SpringBootApplication
 public class CalculoController {
+	
 	private static final Logger log = LoggerFactory.getLogger(CalculoController.class);
-
-	@Autowired
-	private CargaEstoque ce;
 
 	@Autowired
 	private EstoqueServiceImpl es;
@@ -40,14 +36,10 @@ public class CalculoController {
 			@PathVariable("qtd") Integer qtd) {
 		Response<List<LojistaDTO>> response = new Response<List<LojistaDTO>>();
 		try {
-			if (ce.getIsDone() == false && es.findOne().equals(Optional.empty())) {
-				Instant startTime = Instant.now();
-				ce.criaThreads();
-				Instant endTime = Instant.now();
-				Duration totalTime = Duration.between(startTime, endTime);
-				log.info("Tempo de execucao da carga:{}", totalTime.getSeconds());
-			}
-			List<EstoqueDTO> dto = converterEstoqueDTO(es.buscaPorProduto(produto));
+			
+			List<Estoque> listaEstoque = es.buscaPorProdutoEmMemoria(produto);
+				
+			List<EstoqueDTO> dto = converterEstoqueDTO(listaEstoque);
 			response.setData(es.calculaQtdPorLoja(dto, produto, qtd));
 		} catch (Exception e) {
 			e.printStackTrace();
