@@ -1,7 +1,6 @@
 package com.banco.ubs.io;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -24,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.banco.ubs.utils.ConfigProperties;
+import com.banco.ubs.utils.Utils;
 
 @Component
 public class CargaEstoqueEmMemoria {
@@ -33,12 +33,6 @@ public class CargaEstoqueEmMemoria {
 	ConfigProperties configProp;
 
 	private Boolean isDone = false;
-
-	static FileFilter filter = new FileFilter() {
-		public boolean accept(File file) {
-			return file.getName().endsWith(".json");
-		}
-	};
 
 	public JSONArray carregaJsons() {
 		JSONArray jsonArray = new JSONArray();
@@ -64,13 +58,12 @@ public class CargaEstoqueEmMemoria {
 				e1.printStackTrace();
 			}
 		});
-		System.out.println( String.format("Tamanho do arquivo: %s", jsonArray.size()) );
 		return jsonArray;
 	}
 
 	private File[] leDiretorio() {
 		File dir = new File(configProp.getConfigValue("prop.dir"));
-		File[] files = dir.listFiles(filter);
+		File[] files = dir.listFiles(Utils.filter);
 		return files;
 	}
 }

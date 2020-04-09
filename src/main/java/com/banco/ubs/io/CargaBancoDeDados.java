@@ -10,14 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.banco.ubs.entities.Estoque;
-import com.banco.ubs.service.EstoqueService;
+import com.banco.ubs.service.impl.EstoqueServiceImpl;
 
 @Component
 public class CargaBancoDeDados {
 	private static final Logger log = LoggerFactory.getLogger(CargaBancoDeDados.class);
 
 	@Autowired
-	private EstoqueService estoqueService;
+	private EstoqueServiceImpl estoqueService;
 
 	private Boolean isDone = false;
 

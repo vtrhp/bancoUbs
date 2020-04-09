@@ -1,5 +1,8 @@
 package com.banco.ubs.utils;
 
+import java.io.File;
+import java.io.FileFilter;
+
 import org.json.simple.JSONObject;
 
 import com.banco.ubs.entities.Estoque;
@@ -19,4 +22,10 @@ public class Utils {
 		estoque.setVolume(Math.floor(estoque.getPreco() * estoque.getQuantidade()));
 		return estoque;
 	}
+
+	public static FileFilter filter = new FileFilter() {
+		public boolean accept(File file) {
+			return file.getName().endsWith(".json");
+		}
+	};
 }

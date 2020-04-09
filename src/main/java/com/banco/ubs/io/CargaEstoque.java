@@ -43,12 +43,6 @@ public class CargaEstoque {
 
 	private Boolean isDone = false;
 
-	static FileFilter filter = new FileFilter() {
-		public boolean accept(File file) {
-			return file.getName().endsWith(".json");
-		}
-	};
-
 	public void criaThreads() throws InterruptedException {
 		Stream.of(leDiretorio()).forEach(f -> this.execThread(task(f)));
 		this.setIsDone(true);
@@ -110,7 +104,7 @@ public class CargaEstoque {
 
 	private File[] leDiretorio() {
     	File dir = new File(configProp.getConfigValue("prop.dir"));
-        File[] files = dir.listFiles(filter);
+        File[] files = dir.listFiles(Utils.filter);
         return files;
 	}
 
